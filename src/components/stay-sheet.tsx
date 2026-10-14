@@ -44,6 +44,7 @@ export function StaySheet({
             guest={guest}
             unitLabel={unit.kind === 'room' ? `Room ${unit.label}` : `Hall · ${unit.label}`}
             unitType={unit.type}
+            onClose={() => onOpenChange(false)} // FIX: We pass a function to close the drawer
           />
         )}
       </SheetContent>
@@ -56,11 +57,13 @@ function StayDetail({
   guest,
   unitLabel,
   unitType,
+  onClose, // FIX: Receive the onClose function
 }: {
   stay: ReturnType<typeof useLodge>['stays'][number]
   guest: ReturnType<typeof useLodge>['guests'][number]
   unitLabel: string
   unitType: string
+  onClose: () => void // FIX: Declare the function type
 }) {
   const lodge = useLodge()
   const bill = stayBill(stay, lodge.payments)
@@ -227,6 +230,7 @@ function StayDetail({
             onClick={() => {
               lodge.checkOut(stay.id)
               toast.success(`${guest.name} checked out of ${unitLabel}`)
+              onClose() // FIX: Close the drawer automatically!
             }}
           >
             <LogOut />
