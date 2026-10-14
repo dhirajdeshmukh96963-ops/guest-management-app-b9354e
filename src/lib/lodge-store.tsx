@@ -11,9 +11,6 @@ import {
   type Unit,
 } from '@/lib/fixtures'
 
-// Session-only store seeded from fixtures. Swap these actions for server
-// functions backed by Netlify Database (see PLAN.md, milestone 2).
-
 interface LodgeState {
   units: Unit[]
   guests: Guest[]
@@ -39,12 +36,31 @@ const uid = (prefix: string) =>
   `${prefix}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
 
 export function LodgeProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = React.useState<LodgeState>({
-    units: UNITS,
-    guests: GUESTS,
-    stays: STAYS,
-    payments: PAYMENTS,
+  
+  // FIX: Read from local browser storage so check-ins and check-outs are remembered!
+  const [state, setState] = React.useState<LodgeState>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('lodge-data')
+      if (saved) {
+        try {
+          return JSON.parse(saved)
+        } catch (e) {
+          console.error("Couldn't read saved data.")
+        }
+      }
+    }
+    return {
+      units: UNITS,
+      guests: GUESTS,
+      stays: STAYS,
+      payments: PAYMENTS,
+    }
   })
+
+  // FIX: Save data to browser automatically whenever a checkout or checkin happens
+  React.useEffect(() => {
+    localStorage.setItem('lodge-data', JSON.stringify(state))
+  }, [state])
 
   const value = React.useMemo<LodgeContextValue>(
     () => ({
