@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#262a5c"/>
+  <circle cx="256" cy="230" r="150" fill="#f2b33d"/>
+  <text x="256" y="296" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="190" font-weight="700" fill="#262a5c">Y</text>
+  <rect x="136" y="410" width="240" height="18" rx="9" fill="#f2b33d"/>
+</svg>
