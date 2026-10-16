@@ -24,15 +24,17 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Clean npm cache & Install Dependencies
+        run: |
+          npm cache clean --force
+          npm install --legacy-peer-deps
 
       - name: Build Web Application
         run: npm run build
 
       - name: Install Capacitor & Create Config
         run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
           npx cap init basic com.example.basic --web-dir dist --yes
 
       - name: Add Android Platform & Sync
