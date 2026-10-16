@@ -29,25 +29,20 @@ jobs:
           npm install --legacy-peer-deps
           npm run build
 
-      - name: Locate Build Output & Setup Capacitor
+      - name: Setup Capacitor and Build Android App
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
 
-          # Find where index.html was built
-          BUILD_PATH=$(find . -maxdepth 3 -name "index.html" -not -path "*/node_modules/*" -not -path "./index.html" -not -path "./public/*" | head -n 1 | xargs dirname)
-
-          if [ -z "$BUILD_PATH" ]; then
-            echo "No build folder found, defaulting to current root"
-            BUILD_PATH="."
+          # Ensure build folder exists
+          if [ -d "dist" ]; then
+            WEB_DIR="dist"
+          elif [ -d "build" ]; then
+            WEB_DIR="build"
+          else
+            WEB_DIR="."
           fi
 
-          echo "Found compiled app at: $BUILD_PATH"
-
-          # Prepare static dist folder for Capacitor
-          mkdir -p capacitor_dist
-          cp -r $BUILD_PATH/* capacitor_dist/
-
-          npx cap init "Guest Management" "com.guest.app" --web-dir "capacitor_dist"
+          npx cap init "Guest Management" "com.guest.app" --web-dir "$WEB_DIR"
           npx cap add android
           npx cap copy
 
