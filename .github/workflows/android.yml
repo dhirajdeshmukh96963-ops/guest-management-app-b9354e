@@ -17,7 +17,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          # Removed cache: 'npm' to prevent errors if package-lock.json is missing
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -31,10 +30,13 @@ jobs:
       - name: Build Web Application
         run: npm run build
 
-      - name: Initialize Capacitor and Add Android
+      - name: Install Capacitor & Create Config
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init basic com.example.basic --web-dir dist --yes-i-am-sure
+          npx cap init basic com.example.basic --web-dir dist --yes
+
+      - name: Add Android Platform & Sync
+        run: |
           npx cap add android
           npx cap sync android
 
