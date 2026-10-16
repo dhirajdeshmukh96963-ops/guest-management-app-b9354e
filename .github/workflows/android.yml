@@ -26,12 +26,12 @@ jobs:
 
       - name: Build Web Application
         run: |
-          npm install
+          npm install --legacy-peer-deps
           npm run build
 
       - name: Setup Capacitor and Android Platform
         run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
           npx cap init "Guest Management" "com.guest.app" --web-dir dist
           npx cap add android
           npx cap copy
