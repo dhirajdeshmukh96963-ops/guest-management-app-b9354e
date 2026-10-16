@@ -29,10 +29,20 @@ jobs:
           npm install --legacy-peer-deps
           npm run build
 
-      - name: Setup Capacitor and Android Platform
+      - name: Detect Build Directory and Setup Capacitor
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
-          npx cap init "Guest Management" "com.guest.app" --web-dir dist
+          
+          # Auto-detect build folder (dist, build, or out)
+          BUILD_DIR="dist"
+          if [ -d "build" ]; then
+            BUILD_DIR="build"
+          elif [ -d "out" ]; then
+            BUILD_DIR="out"
+          fi
+          echo "Detected web build directory: $BUILD_DIR"
+          
+          npx cap init "Guest Management" "com.guest.app" --web-dir "$BUILD_DIR"
           npx cap add android
           npx cap copy
 
