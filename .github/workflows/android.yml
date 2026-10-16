@@ -26,7 +26,6 @@ jobs:
           java-version: '17'
 
       - name: Install Dependencies
-        path: ~/.npm
         run: npm install
 
       - name: Build Web Application
