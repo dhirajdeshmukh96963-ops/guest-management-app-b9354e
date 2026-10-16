@@ -1,4 +1,4 @@
-name: Build Offline Android APK
+name: Build Android APK
 
 on:
   push:
@@ -16,7 +16,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: '22'
+          cache: 'npm'
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -24,27 +25,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Install Dependencies
+        path: ~/.npm
+        run: npm install
+
       - name: Build Web Application
+        run: npm run build
+
+      - name: Initialize Capacitor and Add Android
         run: |
-          npm install --legacy-peer-deps
-          npm run build
-
-      - name: Setup Capacitor and Build Android App
-        run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
-
-          # Ensure build folder exists
-          if [ -d "dist" ]; then
-            WEB_DIR="dist"
-          elif [ -d "build" ]; then
-            WEB_DIR="build"
-          else
-            WEB_DIR="."
-          fi
-
-          npx cap init "Guest Management" "com.guest.app" --web-dir "$WEB_DIR"
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npx cap init basic com.example.basic --web-dir dist --yes-i-am-sure
           npx cap add android
-          npx cap copy
+          npx cap sync android
 
       - name: Build Debug APK
         run: |
@@ -55,5 +48,5 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Guest-Management-App
+          name: app-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
