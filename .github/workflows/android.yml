@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          # Removed cache: 'npm' to prevent errors if package-lock.json is missing
 
       - name: Setup Java
         uses: actions/setup-java@v4
