@@ -199,7 +199,7 @@ function LiveScanner({
         <DialogHeader>
           <DialogTitle className="font-display">AI text scanner</DialogTitle>
           <DialogDescription>
-            Hold the Aadhaar card or ID inside the frame. Name, DOB, address and number fill in automatically.
+            Hold the ID card inside the frame. Name, DOB, address and number fill in automatically.
           </DialogDescription>
         </DialogHeader>
         <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-foreground">
