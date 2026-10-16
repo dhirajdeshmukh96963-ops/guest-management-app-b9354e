@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -27,13 +27,15 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Dependencies & Capacitor
+      - name: Install Dependencies
         run: |
-          npm ci || npm install
+          npm install
           npm run build
+
+      - name: Add Capacitor Android Platform
+        run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "Guest App" "com.guest.app" --web-dir dist
-          npx cap add android
+          npx cap add android || true
           npx cap copy
 
       - name: Build Debug APK
