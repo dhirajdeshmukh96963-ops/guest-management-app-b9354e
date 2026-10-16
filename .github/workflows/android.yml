@@ -24,18 +24,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Dependencies
+      - name: Build Web Application
         run: |
           npm install
           npm run build
 
-      - name: Add Capacitor Android Platform
+      - name: Setup Capacitor and Android Platform
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap add android || true
+          npx cap init "Guest Management" "com.guest.app" --web-dir dist
+          npx cap add android
           npx cap copy
 
       - name: Build Debug APK
