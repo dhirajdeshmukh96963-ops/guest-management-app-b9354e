@@ -85,11 +85,24 @@ function CheckIn() {
   }
 
   // Stand-in for the AI extraction call (PLAN.md, milestone 3).
+  // Previously this unconditionally wrote SAMPLE_SCAN into the form which could
+  // overwrite a user's typed values or repeatedly autofill the same sample ID.
+  // To avoid surprising overwrites we now only fill fields that are currently
+  // empty. This keeps user-entered values intact and prevents the "previous ID"
+  // from appearing when re-scanning.
   const scan = (index: number) => {
     setScanning(index)
     window.setTimeout(() => {
-      setGuest((g) => ({ ...g, ...SAMPLE_SCAN }))
-      setFilled(new Set(Object.keys(SAMPLE_SCAN) as (keyof GuestFields)[]))
+      setGuest((g) => {
+        const merged = { ...g }
+        ;(Object.keys(SAMPLE_SCAN) as (keyof GuestFields)[]).forEach((k) => {
+          if (!merged[k]) merged[k] = SAMPLE_SCAN[k] as any
+        })
+        // Mark only the fields that are now populated as auto-filled so the UI
+        // highlights them for verification.
+        setFilled(new Set((Object.keys(SAMPLE_SCAN) as (keyof GuestFields)[]).filter((k) => !!merged[k])))
+        return merged
+      })
       setScanning(null)
       toast.success('Details extracted from document', {
         description: 'Please check each highlighted field before saving.',
@@ -177,7 +190,7 @@ function CheckIn() {
                 </Select>
               </Field>
               <Field label={guest.docType === 'Aadhaar' ? 'Aadhaar number' : 'ID number'}>
-                <Input className={cn(field('docNumber'), 'tracking-wider')} value={guest.docNumber} onChange={(e) => set('docNumber', e.target.value)} placeholder={guest.docType === 'Aadhaar' ? '0000 0000 0000' : ''} />
+                <Input className={cn(field('docNumber'), 'tracking-wider')} value={guest.docNumber} onChange={(e) => set('docNumber', e.target.value)} placeholder={guest.docType === 'Aadhaar' ? '[...]' : 'ID number'} />
               </Field>
               <Field label="Mobile number" className="sm:col-span-2">
                 <Input type="tel" inputMode="tel" className={field('phone')} value={guest.phone} onChange={(e) => set('phone', e.target.value)} placeholder="10-digit mobile" />
