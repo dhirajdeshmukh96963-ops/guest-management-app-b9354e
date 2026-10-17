@@ -40,7 +40,7 @@ jobs:
         run: pnpm add -D @capacitor/core @capacitor/cli @capacitor/android
 
       - name: Initialize Capacitor app
-        run: pnpm exec cap init "Guest Management" com.example.guestmanagement --web-dir=dist --npm-client=pnpm
+        run: pnpm exec cap init "Guest Management" com.example.guestmanagement --web-dir=dist
 
       - name: Add Android Platform & Sync
         run: |
